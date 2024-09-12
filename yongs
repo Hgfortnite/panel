@@ -1,1 +1,36 @@
+- Script install Desktop and VNC to Github Codespaces! (xfce4) -
+- this just a copy right -
+- here's the link https://youtu.be/jncuv4FcBLc?si=kMZa7hnukhHs4k3u-
 
+#to update and upgrade repository
+sudo apt update && sudo apt upgrade 
+
+#installing the xfce4
+sudo apt install xfce4 xfce4-goodies novnc python3-websockify python3-numpy tightvncserver htop nano neofetch -y
+
+#ssh certificate
+openssl req -x509 -nodes -newkey rsa:3072 -keyout novnc.pem -out novnc.pem -days 3650
+
+#making vnc server
+#it will ask for the password
+USER=root vncserver
+
+#killing the vnc server
+vncserver -kill :1
+
+#making back up files
+mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
+
+#making a startup for xfce4 desktop
+nano ~/.vnc/xstartup
+
+#once inside the file copy and paste this
+#!/bin/bash
+xrdb $HOME/.Xresources
+startxfce4 &
+
+#starting the vnc server again
+USER=root vncserver
+
+#websocket to open novnc viewer
+websockify -D --web=/usr/share/novnc/ --cert=/home/ubuntu/novnc.pem 6080 localhost:5901
